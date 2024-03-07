@@ -26,7 +26,7 @@ const Index = () => {
     if (isPlaying) {
       boardInterval = setInterval(() => {
         setGameWidth((prevWidth) => (prevWidth === 0 ? 100 : prevWidth - 1));
-      }, 1000);
+      }, 500);
     }
 
     return () => {
