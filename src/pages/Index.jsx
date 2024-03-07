@@ -72,9 +72,18 @@ const Index = () => {
         <IconButton aria-label="Start game" onClick={toggle} ml="2">
           {isPlaying ? "Pause" : "Start"}
         </IconButton>
+        <IconButton aria-label="Restart game" icon={<FaArrowUp />} onClick={restartGame} ml="2" />
       </Flex>
     </Flex>
   );
+
+  function restartGame() {
+    setBirdPosition(50);
+    setIsAutoMoving(false);
+    setGameWidth(100);
+    toggle(false);
+    setGravity(0);
+  }
 };
 
 export default Index;
