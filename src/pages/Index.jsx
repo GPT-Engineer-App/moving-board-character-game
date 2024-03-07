@@ -25,18 +25,27 @@ const Index = () => {
 
     let boardInterval;
     if (isPlaying) {
-      // Move the obstacles leftwards and add new obstacles periodically
+      // Move the obstacles leftwards and add multiple new obstacles at different intervals
       boardInterval = setInterval(() => {
         setGameWidth((prevWidth) => (prevWidth === 0 ? 100 : prevWidth - 1));
         setObstacles((prevObstacles) => {
           let newObstacles = prevObstacles
-            .map((obstacle) => {
-              return { ...obstacle, width: obstacle.width - 1 };
-            })
+            .map((obstacle) => ({
+              ...obstacle,
+              width: obstacle.width - 1,
+            }))
             .filter((obstacle) => obstacle.width > 0);
 
           if (gameWidth % 30 === 0) {
             newObstacles.push({ id: prevObstacles.length + 1, width: 100 });
+          }
+
+          if (gameWidth % 45 === 0) {
+            newObstacles.push({ id: prevObstacles.length + 2, width: 80 });
+          }
+
+          if (gameWidth % 60 === 0) {
+            newObstacles.push({ id: prevObstacles.length + 3, width: 60 });
           }
 
           return newObstacles;
