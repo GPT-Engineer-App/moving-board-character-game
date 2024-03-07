@@ -35,14 +35,25 @@ const Index = () => {
     };
   }, [isPlaying, isAutoMoving]);
 
+  const [gravity, setGravity] = useState(0);
+
   useInterval(
     () => {
       if (isAutoMoving) {
-        setBirdPosition((prevPosition) => (prevPosition <= 10 ? 90 : prevPosition - 20));
+        setBirdPosition((prevPosition) => Math.max(0, prevPosition - 5));
       }
     },
-    isAutoMoving ? 500 : null,
+    isAutoMoving ? 50 : null,
   );
+
+  useInterval(() => {
+    if (isAutoMoving && birdPosition < 100) {
+      setGravity((prevGravity) => prevGravity + 0.5);
+      setBirdPosition((prevPosition) => Math.min(100, prevPosition + gravity));
+    } else {
+      setGravity(0);
+    }
+  }, 50);
 
   // Funções para mover o pássaro para cima e para baixo
   const moveBirdUp = () => setBirdPosition(birdPosition - 10);
