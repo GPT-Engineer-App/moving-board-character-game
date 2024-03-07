@@ -1,22 +1,48 @@
 import React, { useState, useEffect } from "react";
-import { Box, Flex, IconButton, useBoolean } from "@chakra-ui/react";
+import { Box, Flex, IconButton, useBoolean, useInterval } from "@chakra-ui/react";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 
 const Index = () => {
-  const [birdPosition, setBirdPosition] = useState(50); // Posição inicial do pássaro
+  const [birdPosition, setBirdPosition] = useState(50);
+  const [isAutoMoving, setIsAutoMoving] = useState(false);
   const [gameWidth, setGameWidth] = useState(100); // Largura do tabuleiro de jogo
   const [isPlaying, { toggle }] = useBoolean(false);
 
-  // Move o tabuleiro
+  // Handle automatic bird movement
+  const toggleAutoMove = () => {
+    setIsAutoMoving(!isAutoMoving);
+  };
+
   useEffect(() => {
-    let interval;
+    const handleKeyDown = (event) => {
+      if (event.code === "Space") {
+        toggleAutoMove();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    let boardInterval;
     if (isPlaying) {
-      interval = setInterval(() => {
+      boardInterval = setInterval(() => {
         setGameWidth((prevWidth) => (prevWidth === 0 ? 100 : prevWidth - 1));
       }, 1000);
     }
-    return () => clearInterval(interval);
-  }, [isPlaying]);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      clearInterval(boardInterval);
+    };
+  }, [isPlaying, isAutoMoving]);
+
+  useInterval(
+    () => {
+      if (isAutoMoving) {
+        setBirdPosition((prevPosition) => (prevPosition <= 10 ? 90 : prevPosition - 20));
+      }
+    },
+    isAutoMoving ? 500 : null,
+  );
 
   // Funções para mover o pássaro para cima e para baixo
   const moveBirdUp = () => setBirdPosition(birdPosition - 10);
